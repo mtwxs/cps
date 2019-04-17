@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>430</width>
-    <height>608</height>
+    <width>832</width>
+    <height>666</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -128,6 +128,20 @@
          </widget>
         </item>
         <item>
+         <widget class="QPushButton" name="pb_sumadd">
+          <property name="text">
+           <string>累加</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="pushButton_2">
+          <property name="text">
+           <string>复位</string>
+          </property>
+         </widget>
+        </item>
+        <item>
          <spacer name="horizontalSpacer">
           <property name="orientation">
            <enum>Qt::Horizontal</enum>
@@ -151,7 +165,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>430</width>
+     <width>832</width>
      <height>23</height>
     </rect>
    </property>

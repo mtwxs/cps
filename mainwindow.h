@@ -25,6 +25,7 @@ private:
 
     QPushButton* pb_calc;
     QPushButton* pb_clear;
+    QPushButton* pb_sumadd;
     QLineEdit* le_guige;
     QTextEdit* te_content;
     QLineEdit* le_dj;
@@ -48,11 +49,16 @@ private:
     QString ppe_width;
     QString ppe_deep;
 
+    QStringList list;
+
 private slots:
     void method_clear();
     void method_calc();
     void method_cbt(int);
     void method_cbl(int);
+    void method_textedit_cursormove();
+    void method_sumadd();
+
 
 };
 
