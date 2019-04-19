@@ -14,6 +14,7 @@ MainWindow::MainWindow(QWidget *parent) :
     pb_calc=ui->pb_calc;
     pb_clear=ui->pb_clear;
     pb_sumadd=ui->pb_sumadd;
+    pb_reset=ui->pb_reset;
     le_dj=ui->le_p_danjai;
 
     cb_tong=ui->cb_tong;
@@ -54,6 +55,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(pb_clear,SIGNAL(clicked()),this,SLOT(method_clear()));
     connect(te_content,SIGNAL(textChanged()),this,SLOT(method_textedit_cursormove()));
     connect(pb_sumadd,SIGNAL(clicked()),this,SLOT(method_sumadd()));
+    connect(pb_reset,SIGNAL(clicked()),this,SLOT(method_reset()));
 
 
 
@@ -67,6 +69,11 @@ MainWindow::~MainWindow()
 void MainWindow::method_clear()
 {
    le_guige->clear();
+   le_600->clear();
+   le_800->clear();
+   le_1000->clear();
+   le_1200->clear();
+   le_400->clear();
 
 }
 
@@ -504,14 +511,277 @@ void MainWindow::method_calc()
 
 
             /////////////////////////////////////////
-//            100*10+100*10+80*8
-//            100*10+100*10+2*80*8
-//            100*10+2*100*10+80*8
-//            100*10+2*100*10+2*80*8
+//            100*10+100*10+80*8  abcnpe mode
+//            100*10+100*10+2*80*8 abcn2pe mode
+//            100*10+2*100*10+80*8 abc2npe mode
+//            100*10+2*100*10+2*80*8 abc2n2pe mode
 
 
             //主单排模式又分四种情况
             if(sl_xinghaoabc.length()==2){
+
+                int pabc_width=sl_xinghaoabc.at(0).toInt();
+                int pabc_deep=sl_xinghaoabc.at(1).toInt();
+
+                //ABCNPE  单排单零
+                if(sl_xinghaon.length()==2){
+                    int pn_width=sl_xinghaon.at(0).toInt();
+                    int pn_deep=sl_xinghaon.at(1).toInt();
+
+
+                    //ABCNPE  单排单零单地
+                    if(sl_xinghaope.length()==2){
+
+                        int ppe_width=sl_xinghaope.at(0).toInt();
+                        int ppe_deep=sl_xinghaope.at(1).toInt();
+
+
+                        te_content->append(QString::number(pabc_width)+"*"+QString::number(pabc_deep)+"+"+QString::number(pn_width)+"*"+QString::number(pn_deep)+"+"+QString::number(ppe_width)+"*"+QString::number(ppe_deep));
+
+                        if(state=="t"){
+                            ui->statusBar->showMessage("ABCNPE MODE | 单排单零单地 材质 铜");
+                            int Tabc=0;
+                            int Tn=0;
+                            int Tpe=0;
+
+                            Tabc=pabc_width*pabc_deep*8.9*dj/1000;
+                            Tn=pn_width*pn_deep*8.9*dj/1000;
+                            Tpe=ppe_width*ppe_deep*8.9*dj/1000;
+
+                            te_content->append(QString::number(Tabc)+" Tabc "+QString::number(Tn)+" Tn "+QString::number(Tpe)+" Tpe");
+
+                            QString TS="Tabc*3*(0.6*"+QString::number(s600)+"+0.8*"+QString::number(s800)+"+1*"+QString::number(s1000)+"+1.2*"+QString::number(s1200)+"+0.4*"+QString::number(s400)+
+
+                                    ")+Tn*(0.6*"+QString::number(s600)+"+0.8*"+QString::number(s800)+"+1*"+QString::number(s1000)+"+1.2*"+QString::number(s1200)+"+0.4*"+QString::number(s400)+
+                                    ")+Tpe*(0.6*"+QString::number(s600)+"+0.8*"+QString::number(s800)+"+1*"+QString::number(s1000)+"+1.2*"+QString::number(s1200)+"+0.4*"+QString::number(s400)+")";
+
+                            te_content->append(TS);
+                            int SUMTS=Tabc*3*(0.4*s400+0.6*s600+0.8*s800+1*s1000+1.2*s1200)+Tn*(0.4*s400+0.6*s600+0.8*s800+1*s1000+1.2*s1200)+Tpe*(0.4*s400+0.6*s600+0.8*s800+1*s1000+1.2*s1200);
+                            te_content->append("= "+QString::number(SUMTS)+"\n");
+                            list.append(QString::number(SUMTS));
+
+
+                         }
+
+                        if(state=="l"){
+                            ui->statusBar->showMessage("ABCNPE MODE | 单排单零单地 材质 铝");
+                            int Labc=0;
+                            int Ln=0;
+                            int Lpe=0;
+
+                            Labc=pabc_width*pabc_deep*2.7*dj/1000;
+                            Ln=pn_width*pn_deep*2.7*dj/1000;
+                            Lpe=ppe_width*ppe_deep*2.7*dj/1000;
+
+                            te_content->append(QString::number(Labc)+" Labc "+QString::number(Ln)+" Ln "+QString::number(Lpe)+" Lpe");
+
+                            QString LS="Labc*3*(0.6*"+QString::number(s600)+"+0.8*"+QString::number(s800)+"+1*"+QString::number(s1000)+"+1.2*"+QString::number(s1200)+"+0.4*"+QString::number(s400)+
+
+                                    ")+Ln*(0.6*"+QString::number(s600)+"+0.8*"+QString::number(s800)+"+1*"+QString::number(s1000)+"+1.2*"+QString::number(s1200)+"+0.4*"+QString::number(s400)+
+                                    ")+Lpe*(0.6*"+QString::number(s600)+"+0.8*"+QString::number(s800)+"+1*"+QString::number(s1000)+"+1.2*"+QString::number(s1200)+"+0.4*"+QString::number(s400)+")";
+
+                            te_content->append(LS);
+                            int SUMLS=Labc*3*(0.4*s400+0.6*s600+0.8*s800+1*s1000+1.2*s1200)+Ln*(0.4*s400+0.6*s600+0.8*s800+1*s1000+1.2*s1200)+Lpe*(0.4*s400+0.6*s600+0.8*s800+1*s1000+1.2*s1200);
+                            te_content->append("= "+QString::number(SUMLS)+"\n");
+                            list.append(QString::number(SUMLS));
+
+
+                             }
+                    }
+                    //ABCN2PE  单排单零复地
+                    if(sl_xinghaope.length()==3){
+
+                        int ppe_sl=sl_xinghaope.at(0).toInt();
+                        int ppe_width=sl_xinghaope.at(1).toInt();
+                        int ppe_deep=sl_xinghaope.at(2).toInt();
+
+
+                        te_content->append(QString::number(pabc_width)+"*"+QString::number(pabc_deep)+"+"+QString::number(pn_width)+"*"+QString::number(pn_deep)+"+"+QString::number(ppe_sl)+"*"+QString::number(ppe_width)+"*"+QString::number(ppe_deep));
+
+                        if(state=="t"){
+                            ui->statusBar->showMessage("ABCNPE MODE | 单排单零复地 材质 铜");
+                            int Tabc=0;
+                            int Tn=0;
+                            int Tpe=0;
+
+                            Tabc=pabc_width*pabc_deep*8.9*dj/1000;
+                            Tn=pn_width*pn_deep*8.9*dj/1000;
+                            Tpe=ppe_width*ppe_deep*8.9*dj/1000;
+
+                            te_content->append(QString::number(Tabc)+" Tabc "+QString::number(Tn)+" Tn "+QString::number(Tpe)+" Tpe");
+
+                            QString TS="Tabc*3*(0.6*"+QString::number(s600)+"+0.8*"+QString::number(s800)+"+1*"+QString::number(s1000)+"+1.2*"+QString::number(s1200)+"+0.4*"+QString::number(s400)+
+
+                                    ")+Tn*(0.6*"+QString::number(s600)+"+0.8*"+QString::number(s800)+"+1*"+QString::number(s1000)+"+1.2*"+QString::number(s1200)+"+0.4*"+QString::number(s400)+
+                                    ")+Tpe*"+QString::number(ppe_sl)+"*(0.6*"+QString::number(s600)+"+0.8*"+QString::number(s800)+"+1*"+QString::number(s1000)+"+1.2*"+QString::number(s1200)+"+0.4*"+QString::number(s400)+")";
+
+                            te_content->append(TS);
+                            int SUMTS=Tabc*3*(0.4*s400+0.6*s600+0.8*s800+1*s1000+1.2*s1200)+Tn*(0.4*s400+0.6*s600+0.8*s800+1*s1000+1.2*s1200)+Tpe*ppe_sl*(0.4*s400+0.6*s600+0.8*s800+1*s1000+1.2*s1200);
+                            te_content->append("= "+QString::number(SUMTS)+"\n");
+                            list.append(QString::number(SUMTS));
+
+
+                         }
+
+                        if(state=="l"){
+                            ui->statusBar->showMessage("ABCNPE MODE | 单排单零复地 材质 铝");
+                            int Labc=0;
+                            int Ln=0;
+                            int Lpe=0;
+
+                            Labc=pabc_width*pabc_deep*2.7*dj/1000;
+                            Ln=pn_width*pn_deep*2.7*dj/1000;
+                            Lpe=ppe_width*ppe_deep*2.7*dj/1000;
+
+                            te_content->append(QString::number(Labc)+" Labc "+QString::number(Ln)+" Ln "+QString::number(Lpe)+" Lpe");
+
+                            QString LS="Labc*3*(0.6*"+QString::number(s600)+"+0.8*"+QString::number(s800)+"+1*"+QString::number(s1000)+"+1.2*"+QString::number(s1200)+"+0.4*"+QString::number(s400)+
+
+                                    ")+Ln*(0.6*"+QString::number(s600)+"+0.8*"+QString::number(s800)+"+1*"+QString::number(s1000)+"+1.2*"+QString::number(s1200)+"+0.4*"+QString::number(s400)+
+                                    ")+Lpe*"+QString::number(ppe_sl)+"*(0.6*"+QString::number(s600)+"+0.8*"+QString::number(s800)+"+1*"+QString::number(s1000)+"+1.2*"+QString::number(s1200)+"+0.4*"+QString::number(s400)+")";
+
+                            te_content->append(LS);
+                            int SUMLS=Labc*3*(0.4*s400+0.6*s600+0.8*s800+1*s1000+1.2*s1200)+Ln*(0.4*s400+0.6*s600+0.8*s800+1*s1000+1.2*s1200)+Lpe*ppe_sl*(0.4*s400+0.6*s600+0.8*s800+1*s1000+1.2*s1200);
+                            te_content->append("= "+QString::number(SUMLS)+"\n");
+                            list.append(QString::number(SUMLS));
+
+
+                             }
+                    }
+
+                }
+
+                //ABC2NPE  单排复零
+                if(sl_xinghaon.length()==3){
+
+                    int pn_sl=sl_xinghaon.at(0).toInt();
+                    int pn_width=sl_xinghaon.at(1).toInt();
+                    int pn_deep=sl_xinghaon.at(2).toInt();
+
+
+                    //ABC2NPE  单排复零单地
+                    if(sl_xinghaope.length()==2){
+
+                        int ppe_width=sl_xinghaope.at(0).toInt();
+                        int ppe_deep=sl_xinghaope.at(1).toInt();
+
+
+                        te_content->append(QString::number(pabc_width)+"*"+QString::number(pabc_deep)+"+"+QString::number(pn_sl)+"*"+QString::number(pn_width)+"*"+QString::number(pn_deep)+"+"+QString::number(ppe_width)+"*"+QString::number(ppe_deep));
+
+                        if(state=="t"){
+                            ui->statusBar->showMessage("ABC"+QString::number(pn_sl)+"NPE MODE | 单排复零单地 材质 铜");
+                            int Tabc=0;
+                            int Tn=0;
+                            int Tpe=0;
+
+                            Tabc=pabc_width*pabc_deep*8.9*dj/1000;
+                            Tn=pn_width*pn_deep*8.9*dj/1000;
+                            Tpe=ppe_width*ppe_deep*8.9*dj/1000;
+
+                            te_content->append(QString::number(Tabc)+" Tabc "+QString::number(Tn)+" Tn "+QString::number(Tpe)+" Tpe");
+
+                            QString TS="Tabc*3*(0.6*"+QString::number(s600)+"+0.8*"+QString::number(s800)+"+1*"+QString::number(s1000)+"+1.2*"+QString::number(s1200)+"+0.4*"+QString::number(s400)+
+
+                                    ")+Tn*"+QString::number(pn_sl)+"*(0.6*"+QString::number(s600)+"+0.8*"+QString::number(s800)+"+1*"+QString::number(s1000)+"+1.2*"+QString::number(s1200)+"+0.4*"+QString::number(s400)+
+                                    ")+Tpe*(0.6*"+QString::number(s600)+"+0.8*"+QString::number(s800)+"+1*"+QString::number(s1000)+"+1.2*"+QString::number(s1200)+"+0.4*"+QString::number(s400)+")";
+
+                            te_content->append(TS);
+                            int SUMTS=Tabc*3*(0.4*s400+0.6*s600+0.8*s800+1*s1000+1.2*s1200)+Tn*pn_sl*(0.4*s400+0.6*s600+0.8*s800+1*s1000+1.2*s1200)+Tpe*(0.4*s400+0.6*s600+0.8*s800+1*s1000+1.2*s1200);
+                            te_content->append("= "+QString::number(SUMTS)+"\n");
+                            list.append(QString::number(SUMTS));
+
+
+                         }
+
+                        if(state=="l"){
+                            ui->statusBar->showMessage("ABC"+QString::number(pn_sl)+"NPE MODE | 单排复零单地 材质 铝");
+                            int Labc=0;
+                            int Ln=0;
+                            int Lpe=0;
+
+                            Labc=pabc_width*pabc_deep*2.7*dj/1000;
+                            Ln=pn_width*pn_deep*2.7*dj/1000;
+                            Lpe=ppe_width*ppe_deep*2.7*dj/1000;
+
+                            te_content->append(QString::number(Labc)+" Labc "+QString::number(Ln)+" Ln "+QString::number(Lpe)+" Lpe");
+
+                            QString LS="Labc*3*(0.6*"+QString::number(s600)+"+0.8*"+QString::number(s800)+"+1*"+QString::number(s1000)+"+1.2*"+QString::number(s1200)+"+0.4*"+QString::number(s400)+
+
+                                    ")+Ln*"+QString::number(pn_sl)+"*(0.6*"+QString::number(s600)+"+0.8*"+QString::number(s800)+"+1*"+QString::number(s1000)+"+1.2*"+QString::number(s1200)+"+0.4*"+QString::number(s400)+
+                                    ")+Lpe*(0.6*"+QString::number(s600)+"+0.8*"+QString::number(s800)+"+1*"+QString::number(s1000)+"+1.2*"+QString::number(s1200)+"+0.4*"+QString::number(s400)+")";
+
+                            te_content->append(LS);
+                            int SUMLS=Labc*3*(0.4*s400+0.6*s600+0.8*s800+1*s1000+1.2*s1200)+Ln*pn_sl*(0.4*s400+0.6*s600+0.8*s800+1*s1000+1.2*s1200)+Lpe*(0.4*s400+0.6*s600+0.8*s800+1*s1000+1.2*s1200);
+                            te_content->append("= "+QString::number(SUMLS)+"\n");
+                            list.append(QString::number(SUMLS));
+
+
+                             }
+
+
+                    }
+                    //ABC2N2PE  单排复零复地
+                    if(sl_xinghaope.length()==3){
+
+                        int ppe_sl=sl_xinghaope.at(0).toInt();
+                        int ppe_width=sl_xinghaope.at(1).toInt();
+                        int ppe_deep=sl_xinghaope.at(2).toInt();
+
+
+                        te_content->append(QString::number(pabc_width)+"*"+QString::number(pabc_deep)+"+"+QString::number(pn_sl)+"*"+QString::number(pn_width)+"*"+QString::number(pn_deep)+"+"+QString::number(ppe_sl)+"*"+QString::number(ppe_width)+"*"+QString::number(ppe_deep));
+
+                        if(state=="t"){
+                            ui->statusBar->showMessage("ABC"+QString::number(pn_sl)+"N"+QString::number(ppe_sl)+"PE MODE | 单排复零复地 材质 铜");
+                            int Tabc=0;
+                            int Tn=0;
+                            int Tpe=0;
+
+                            Tabc=pabc_width*pabc_deep*8.9*dj/1000;
+                            Tn=pn_width*pn_deep*8.9*dj/1000;
+                            Tpe=ppe_width*ppe_deep*8.9*dj/1000;
+
+                            te_content->append(QString::number(Tabc)+" Tabc "+QString::number(Tn)+" Tn "+QString::number(Tpe)+" Tpe");
+
+                            QString TS="Tabc*3*(0.6*"+QString::number(s600)+"+0.8*"+QString::number(s800)+"+1*"+QString::number(s1000)+"+1.2*"+QString::number(s1200)+"+0.4*"+QString::number(s400)+
+
+                                    ")+Tn*"+QString::number(pn_sl)+"*(0.6*"+QString::number(s600)+"+0.8*"+QString::number(s800)+"+1*"+QString::number(s1000)+"+1.2*"+QString::number(s1200)+"+0.4*"+QString::number(s400)+
+                                    ")+Tpe*"+QString::number(ppe_sl)+"*(0.6*"+QString::number(s600)+"+0.8*"+QString::number(s800)+"+1*"+QString::number(s1000)+"+1.2*"+QString::number(s1200)+"+0.4*"+QString::number(s400)+")";
+
+                            te_content->append(TS);
+                            int SUMTS=Tabc*3*(0.4*s400+0.6*s600+0.8*s800+1*s1000+1.2*s1200)+Tn*pn_sl*(0.4*s400+0.6*s600+0.8*s800+1*s1000+1.2*s1200)+Tpe*ppe_sl*(0.4*s400+0.6*s600+0.8*s800+1*s1000+1.2*s1200);
+                            te_content->append("= "+QString::number(SUMTS)+"\n");
+                            list.append(QString::number(SUMTS));
+
+
+                         }
+
+                        if(state=="l"){
+                            ui->statusBar->showMessage("ABC"+QString::number(pn_sl)+"N"+QString::number(ppe_sl)+"PE MODE | 单排复零复地 材质 铝");
+                            int Labc=0;
+                            int Ln=0;
+                            int Lpe=0;
+
+                            Labc=pabc_width*pabc_deep*2.7*dj/1000;
+                            Ln=pn_width*pn_deep*2.7*dj/1000;
+                            Lpe=ppe_width*ppe_deep*2.7*dj/1000;
+
+                            te_content->append(QString::number(Labc)+" Labc "+QString::number(Ln)+" Ln "+QString::number(Lpe)+" Lpe");
+
+                            QString LS="Labc*3*(0.6*"+QString::number(s600)+"+0.8*"+QString::number(s800)+"+1*"+QString::number(s1000)+"+1.2*"+QString::number(s1200)+"+0.4*"+QString::number(s400)+
+
+                                    ")+Ln*"+QString::number(pn_sl)+"*(0.6*"+QString::number(s600)+"+0.8*"+QString::number(s800)+"+1*"+QString::number(s1000)+"+1.2*"+QString::number(s1200)+"+0.4*"+QString::number(s400)+
+                                    ")+Lpe*"+QString::number(ppe_sl)+"*(0.6*"+QString::number(s600)+"+0.8*"+QString::number(s800)+"+1*"+QString::number(s1000)+"+1.2*"+QString::number(s1200)+"+0.4*"+QString::number(s400)+")";
+
+                            te_content->append(LS);
+                            int SUMLS=Labc*3*(0.4*s400+0.6*s600+0.8*s800+1*s1000+1.2*s1200)+Ln*pn_sl*(0.4*s400+0.6*s600+0.8*s800+1*s1000+1.2*s1200)+Lpe*ppe_sl*(0.4*s400+0.6*s600+0.8*s800+1*s1000+1.2*s1200);
+                            te_content->append("= "+QString::number(SUMLS)+"\n");
+                            list.append(QString::number(SUMLS));
+
+
+                             }
+
+                    }
+                }
 
             }
 
@@ -522,6 +792,291 @@ void MainWindow::method_calc()
             //            2*100*10+2*100*10+2*80*8
             //主复排模式又分四种情况
             if(sl_xinghaoabc.length()==3){
+                int pabc_sl=sl_xinghaoabc.at(0).toInt();
+                int pabc_width=sl_xinghaoabc.at(1).toInt();
+                int pabc_deep=sl_xinghaoabc.at(2).toInt();
+
+                //单零模式
+                if(sl_xinghaon.length()==2){
+
+                    int pn_width=sl_xinghaon.at(0).toInt();
+                    int pn_deep=sl_xinghaon.at(1).toInt();
+
+                    //单零单地模式
+                    if(sl_xinghaope.length()==2){
+
+                        int ppe_width=sl_xinghaope.at(0).toInt();
+                        int ppe_deep=sl_xinghaope.at(1).toInt();
+
+
+                        te_content->append(QString::number(pabc_sl)+"*"+QString::number(pabc_width)+"*"+QString::number(pabc_deep)+"+"+QString::number(pn_width)+"*"+QString::number(pn_deep)+"+"+QString::number(ppe_width)+"*"+QString::number(ppe_deep));
+
+                        if(state=="t"){
+                            ui->statusBar->showMessage(QString::number(pabc_sl)+"ABCNPE MODE | 复排单零单地 材质 铜");
+                            int Tabc=0;
+                            int Tn=0;
+                            int Tpe=0;
+
+                            Tabc=pabc_width*pabc_deep*8.9*dj/1000;
+                            Tn=pn_width*pn_deep*8.9*dj/1000;
+                            Tpe=ppe_width*ppe_deep*8.9*dj/1000;
+
+                            te_content->append(QString::number(Tabc)+" Tabc "+QString::number(Tn)+" Tn "+QString::number(Tpe)+" Tpe");
+
+                            QString TS="Tabc*3*"+QString::number(pabc_sl)+"*(0.6*"+QString::number(s600)+"+0.8*"+QString::number(s800)+"+1*"+QString::number(s1000)+"+1.2*"+QString::number(s1200)+"+0.4*"+QString::number(s400)+
+
+                                    ")+Tn*(0.6*"+QString::number(s600)+"+0.8*"+QString::number(s800)+"+1*"+QString::number(s1000)+"+1.2*"+QString::number(s1200)+"+0.4*"+QString::number(s400)+
+                                    ")+Tpe*(0.6*"+QString::number(s600)+"+0.8*"+QString::number(s800)+"+1*"+QString::number(s1000)+"+1.2*"+QString::number(s1200)+"+0.4*"+QString::number(s400)+")";
+
+                            te_content->append(TS);
+                            int SUMTS=Tabc*pabc_sl*3*(0.4*s400+0.6*s600+0.8*s800+1*s1000+1.2*s1200)+Tn*(0.4*s400+0.6*s600+0.8*s800+1*s1000+1.2*s1200)+Tpe*(0.4*s400+0.6*s600+0.8*s800+1*s1000+1.2*s1200);
+                            te_content->append("= "+QString::number(SUMTS)+"\n");
+                            list.append(QString::number(SUMTS));
+
+
+                         }
+
+                        if(state=="l"){
+                            ui->statusBar->showMessage(QString::number(pabc_sl)+"ABCNPE MODE | 复排单零单地 材质 铝");
+                            int Labc=0;
+                            int Ln=0;
+                            int Lpe=0;
+
+                            Labc=pabc_width*pabc_deep*2.7*dj/1000;
+                            Ln=pn_width*pn_deep*2.7*dj/1000;
+                            Lpe=ppe_width*ppe_deep*2.7*dj/1000;
+
+                            te_content->append(QString::number(Labc)+" Labc "+QString::number(Ln)+" Ln "+QString::number(Lpe)+" Lpe");
+
+                            QString LS="Labc*3*"+QString::number(pabc_sl)+"*(0.6*"+QString::number(s600)+"+0.8*"+QString::number(s800)+"+1*"+QString::number(s1000)+"+1.2*"+QString::number(s1200)+"+0.4*"+QString::number(s400)+
+
+                                    ")+Ln*(0.6*"+QString::number(s600)+"+0.8*"+QString::number(s800)+"+1*"+QString::number(s1000)+"+1.2*"+QString::number(s1200)+"+0.4*"+QString::number(s400)+
+                                    ")+Lpe*(0.6*"+QString::number(s600)+"+0.8*"+QString::number(s800)+"+1*"+QString::number(s1000)+"+1.2*"+QString::number(s1200)+"+0.4*"+QString::number(s400)+")";
+
+                            te_content->append(LS);
+                            int SUMLS=Labc*3*pabc_sl*(0.4*s400+0.6*s600+0.8*s800+1*s1000+1.2*s1200)+Ln*(0.4*s400+0.6*s600+0.8*s800+1*s1000+1.2*s1200)+Lpe*(0.4*s400+0.6*s600+0.8*s800+1*s1000+1.2*s1200);
+                            te_content->append("= "+QString::number(SUMLS)+"\n");
+                            list.append(QString::number(SUMLS));
+
+
+                             }
+                    }
+
+                    //单零复地模式
+                    if(sl_xinghaope.length()==3){
+
+
+
+                        int ppe_sl=sl_xinghaope.at(0).toInt();
+                        int ppe_width=sl_xinghaope.at(1).toInt();
+                        int ppe_deep=sl_xinghaope.at(2).toInt();
+
+
+                        te_content->append(QString::number(pabc_sl)+"*"+QString::number(pabc_width)+"*"+QString::number(pabc_deep)+"+"+QString::number(pn_width)+"*"+QString::number(pn_deep)+"+"+QString::number(ppe_sl)+"*"+QString::number(ppe_width)+"*"+QString::number(ppe_deep));
+
+                        if(state=="t"){
+                            ui->statusBar->showMessage(QString::number(pabc_sl)+"ABCN"+QString::number(ppe_sl)+"PE MODE | 复排单零复地 材质 铜");
+                            int Tabc=0;
+                            int Tn=0;
+                            int Tpe=0;
+
+                            Tabc=pabc_width*pabc_deep*8.9*dj/1000;
+                            Tn=pn_width*pn_deep*8.9*dj/1000;
+                            Tpe=ppe_width*ppe_deep*8.9*dj/1000;
+
+                            te_content->append(QString::number(Tabc)+" Tabc "+QString::number(Tn)+" Tn "+QString::number(Tpe)+" Tpe");
+
+                            QString TS="Tabc*3*"+QString::number(pabc_sl)+"*(0.6*"+QString::number(s600)+"+0.8*"+QString::number(s800)+"+1*"+QString::number(s1000)+"+1.2*"+QString::number(s1200)+"+0.4*"+QString::number(s400)+
+
+                                    ")+Tn*(0.6*"+QString::number(s600)+"+0.8*"+QString::number(s800)+"+1*"+QString::number(s1000)+"+1.2*"+QString::number(s1200)+"+0.4*"+QString::number(s400)+
+                                    ")+Tpe*"+QString::number(ppe_sl)+"*(0.6*"+QString::number(s600)+"+0.8*"+QString::number(s800)+"+1*"+QString::number(s1000)+"+1.2*"+QString::number(s1200)+"+0.4*"+QString::number(s400)+")";
+
+                            te_content->append(TS);
+                            int SUMTS=Tabc*pabc_sl*3*(0.4*s400+0.6*s600+0.8*s800+1*s1000+1.2*s1200)+Tn*(0.4*s400+0.6*s600+0.8*s800+1*s1000+1.2*s1200)+Tpe*ppe_sl*(0.4*s400+0.6*s600+0.8*s800+1*s1000+1.2*s1200);
+                            te_content->append("= "+QString::number(SUMTS)+"\n");
+                            list.append(QString::number(SUMTS));
+
+
+                         }
+
+                        if(state=="l"){
+                            ui->statusBar->showMessage(QString::number(pabc_sl)+"ABCN"+QString::number(ppe_sl)+"PE MODE | 复排单零复地 材质 铝");
+                            int Labc=0;
+                            int Ln=0;
+                            int Lpe=0;
+
+                            Labc=pabc_width*pabc_deep*2.7*dj/1000;
+                            Ln=pn_width*pn_deep*2.7*dj/1000;
+                            Lpe=ppe_width*ppe_deep*2.7*dj/1000;
+
+                            te_content->append(QString::number(Labc)+" Labc "+QString::number(Ln)+" Ln "+QString::number(Lpe)+" Lpe");
+
+                            QString LS="Labc*3*"+QString::number(pabc_sl)+"*(0.6*"+QString::number(s600)+"+0.8*"+QString::number(s800)+"+1*"+QString::number(s1000)+"+1.2*"+QString::number(s1200)+"+0.4*"+QString::number(s400)+
+
+                                    ")+Ln*(0.6*"+QString::number(s600)+"+0.8*"+QString::number(s800)+"+1*"+QString::number(s1000)+"+1.2*"+QString::number(s1200)+"+0.4*"+QString::number(s400)+
+                                    ")+Lpe*"+QString::number(ppe_sl)+"*(0.6*"+QString::number(s600)+"+0.8*"+QString::number(s800)+"+1*"+QString::number(s1000)+"+1.2*"+QString::number(s1200)+"+0.4*"+QString::number(s400)+")";
+
+                            te_content->append(LS);
+                            int SUMLS=Labc*3*pabc_sl*(0.4*s400+0.6*s600+0.8*s800+1*s1000+1.2*s1200)+Ln*(0.4*s400+0.6*s600+0.8*s800+1*s1000+1.2*s1200)+Lpe*ppe_sl*(0.4*s400+0.6*s600+0.8*s800+1*s1000+1.2*s1200);
+                            te_content->append("= "+QString::number(SUMLS)+"\n");
+                            list.append(QString::number(SUMLS));
+
+
+                             }
+
+
+
+                    }
+
+
+                    }
+
+                }
+
+
+                //复零模式
+                if(sl_xinghaon.length()==3){
+
+                    int pabc_sl=sl_xinghaoabc.at(0).toInt();
+                    int pabc_width=sl_xinghaoabc.at(1).toInt();
+                    int pabc_deep=sl_xinghaoabc.at(2).toInt();
+
+
+                    int pn_sl=sl_xinghaon.at(0).toInt();
+                    int pn_width=sl_xinghaon.at(1).toInt();
+                    int pn_deep=sl_xinghaon.at(2).toInt();
+
+
+
+
+
+                        //复零单地模式
+                        if(sl_xinghaope.length()==2){
+
+
+                            int ppe_width=sl_xinghaope.at(0).toInt();
+                            int ppe_deep=sl_xinghaope.at(1).toInt();
+
+
+                            te_content->append(QString::number(pabc_sl)+"*"+QString::number(pabc_width)+"*"+QString::number(pabc_deep)+"+"+QString::number(pn_sl)+"*"+QString::number(pn_width)+"*"+QString::number(pn_deep)+"+"+QString::number(ppe_width)+"*"+QString::number(ppe_deep));
+
+                            if(state=="t"){
+                                ui->statusBar->showMessage(QString::number(pabc_sl)+"ABC"+QString(pn_sl)+"NPE MODE | 复排复零单地 材质 铜");
+                                int Tabc=0;
+                                int Tn=0;
+                                int Tpe=0;
+
+                                Tabc=pabc_width*pabc_deep*8.9*dj/1000;
+                                Tn=pn_width*pn_deep*8.9*dj/1000;
+                                Tpe=ppe_width*ppe_deep*8.9*dj/1000;
+
+                                te_content->append(QString::number(Tabc)+" Tabc "+QString::number(Tn)+" Tn "+QString::number(Tpe)+" Tpe");
+
+                                QString TS="Tabc*3*"+QString::number(pabc_sl)+"*(0.6*"+QString::number(s600)+"+0.8*"+QString::number(s800)+"+1*"+QString::number(s1000)+"+1.2*"+QString::number(s1200)+"+0.4*"+QString::number(s400)+
+
+                                        ")+Tn*"+QString::number(pn_sl)+"*(0.6*"+QString::number(s600)+"+0.8*"+QString::number(s800)+"+1*"+QString::number(s1000)+"+1.2*"+QString::number(s1200)+"+0.4*"+QString::number(s400)+
+                                        ")+Tpe*(0.6*"+QString::number(s600)+"+0.8*"+QString::number(s800)+"+1*"+QString::number(s1000)+"+1.2*"+QString::number(s1200)+"+0.4*"+QString::number(s400)+")";
+
+                                te_content->append(TS);
+                                int SUMTS=Tabc*pabc_sl*3*(0.4*s400+0.6*s600+0.8*s800+1*s1000+1.2*s1200)+Tn*pn_sl*(0.4*s400+0.6*s600+0.8*s800+1*s1000+1.2*s1200)+Tpe*(0.4*s400+0.6*s600+0.8*s800+1*s1000+1.2*s1200);
+                                te_content->append("= "+QString::number(SUMTS)+"\n");
+                                list.append(QString::number(SUMTS));
+
+
+                             }
+
+                            if(state=="l"){
+                                ui->statusBar->showMessage(QString::number(pabc_sl)+"ABC"+QString(pn_sl)+"NPE MODE | 复排复零单地 材质 铝");
+                                int Labc=0;
+                                int Ln=0;
+                                int Lpe=0;
+
+                                Labc=pabc_width*pabc_deep*2.7*dj/1000;
+                                Ln=pn_width*pn_deep*2.7*dj/1000;
+                                Lpe=ppe_width*ppe_deep*2.7*dj/1000;
+
+                                te_content->append(QString::number(Labc)+" Labc "+QString::number(Ln)+" Ln "+QString::number(Lpe)+" Lpe");
+
+                                QString LS="Labc*3*"+QString::number(pabc_sl)+"*(0.6*"+QString::number(s600)+"+0.8*"+QString::number(s800)+"+1*"+QString::number(s1000)+"+1.2*"+QString::number(s1200)+"+0.4*"+QString::number(s400)+
+
+                                        ")+Ln*"+QString::number(pn_sl)+"*(0.6*"+QString::number(s600)+"+0.8*"+QString::number(s800)+"+1*"+QString::number(s1000)+"+1.2*"+QString::number(s1200)+"+0.4*"+QString::number(s400)+
+                                        ")+Lpe*(0.6*"+QString::number(s600)+"+0.8*"+QString::number(s800)+"+1*"+QString::number(s1000)+"+1.2*"+QString::number(s1200)+"+0.4*"+QString::number(s400)+")";
+
+                                te_content->append(LS);
+                                int SUMLS=Labc*3*pabc_sl*(0.4*s400+0.6*s600+0.8*s800+1*s1000+1.2*s1200)+Ln*pn_sl*(0.4*s400+0.6*s600+0.8*s800+1*s1000+1.2*s1200)+Lpe*(0.4*s400+0.6*s600+0.8*s800+1*s1000+1.2*s1200);
+                                te_content->append("= "+QString::number(SUMLS)+"\n");
+                                list.append(QString::number(SUMLS));
+
+
+                                 }
+
+
+                        }
+
+                        //复零复地模式
+                        if(sl_xinghaope.length()==3){
+
+                            int ppe_sl=sl_xinghaope.at(0).toInt();
+                            int ppe_width=sl_xinghaope.at(1).toInt();
+                            int ppe_deep=sl_xinghaope.at(2).toInt();
+
+
+                            te_content->append(QString::number(pabc_sl)+"*"+QString::number(pabc_width)+"*"+QString::number(pabc_deep)+"+"+QString::number(pn_sl)+"*"+QString::number(pn_width)+"*"+QString::number(pn_deep)+"+"+QString::number(ppe_sl)+"*"+QString::number(ppe_width)+"*"+QString::number(ppe_deep));
+
+                            if(state=="t"){
+                                ui->statusBar->showMessage(QString::number(pabc_sl)+"ABC"+QString(pn_sl)+"NPE MODE | 复排复零复地 材质 铜");
+                                int Tabc=0;
+                                int Tn=0;
+                                int Tpe=0;
+
+                                Tabc=pabc_width*pabc_deep*8.9*dj/1000;
+                                Tn=pn_width*pn_deep*8.9*dj/1000;
+                                Tpe=ppe_width*ppe_deep*8.9*dj/1000;
+
+                                te_content->append(QString::number(Tabc)+" Tabc "+QString::number(Tn)+" Tn "+QString::number(Tpe)+" Tpe");
+
+                                QString TS="Tabc*3*"+QString::number(pabc_sl)+"*(0.6*"+QString::number(s600)+"+0.8*"+QString::number(s800)+"+1*"+QString::number(s1000)+"+1.2*"+QString::number(s1200)+"+0.4*"+QString::number(s400)+
+
+                                        ")+Tn*"+QString::number(pn_sl)+"*(0.6*"+QString::number(s600)+"+0.8*"+QString::number(s800)+"+1*"+QString::number(s1000)+"+1.2*"+QString::number(s1200)+"+0.4*"+QString::number(s400)+
+                                        ")+Tpe*"+QString::number(ppe_sl)+"*(0.6*"+QString::number(s600)+"+0.8*"+QString::number(s800)+"+1*"+QString::number(s1000)+"+1.2*"+QString::number(s1200)+"+0.4*"+QString::number(s400)+")";
+
+                                te_content->append(TS);
+                                int SUMTS=Tabc*pabc_sl*3*(0.4*s400+0.6*s600+0.8*s800+1*s1000+1.2*s1200)+Tn*pn_sl*(0.4*s400+0.6*s600+0.8*s800+1*s1000+1.2*s1200)+Tpe*ppe_sl*(0.4*s400+0.6*s600+0.8*s800+1*s1000+1.2*s1200);
+                                te_content->append("= "+QString::number(SUMTS)+"\n");
+                                list.append(QString::number(SUMTS));
+
+
+                             }
+
+                            if(state=="l"){
+                                ui->statusBar->showMessage(QString::number(pabc_sl)+"ABC"+QString(pn_sl)+"NPE MODE | 复排复零复地 材质 铝");
+                                int Labc=0;
+                                int Ln=0;
+                                int Lpe=0;
+
+                                Labc=pabc_width*pabc_deep*2.7*dj/1000;
+                                Ln=pn_width*pn_deep*2.7*dj/1000;
+                                Lpe=ppe_width*ppe_deep*2.7*dj/1000;
+
+                                te_content->append(QString::number(Labc)+" Labc "+QString::number(Ln)+" Ln "+QString::number(Lpe)+" Lpe");
+
+                                QString LS="Labc*3*"+QString::number(pabc_sl)+"*(0.6*"+QString::number(s600)+"+0.8*"+QString::number(s800)+"+1*"+QString::number(s1000)+"+1.2*"+QString::number(s1200)+"+0.4*"+QString::number(s400)+
+
+                                        ")+Ln*"+QString::number(pn_sl)+"*(0.6*"+QString::number(s600)+"+0.8*"+QString::number(s800)+"+1*"+QString::number(s1000)+"+1.2*"+QString::number(s1200)+"+0.4*"+QString::number(s400)+
+                                        ")+Lpe*"+QString::number(ppe_sl)+"*(0.6*"+QString::number(s600)+"+0.8*"+QString::number(s800)+"+1*"+QString::number(s1000)+"+1.2*"+QString::number(s1200)+"+0.4*"+QString::number(s400)+")";
+
+                                te_content->append(LS);
+                                int SUMLS=Labc*3*pabc_sl*(0.4*s400+0.6*s600+0.8*s800+1*s1000+1.2*s1200)+Ln*pn_sl*(0.4*s400+0.6*s600+0.8*s800+1*s1000+1.2*s1200)+Lpe*ppe_sl*(0.4*s400+0.6*s600+0.8*s800+1*s1000+1.2*s1200);
+                                te_content->append("= "+QString::number(SUMLS)+"\n");
+                                list.append(QString::number(SUMLS));
+
+
+                                 }
+                        }
+
+
+
+
 
             }
 
@@ -567,10 +1122,19 @@ void MainWindow::method_sumadd()
 {
 
     int len=list.length();
-    int sum=0;
-    for (int i=0;i<len;i++){
-        sum=sum+list.at(i).toInt();
+    if(len>0){
+        int sum=0;
+        for (int i=0;i<len;i++){
+            sum=sum+list.at(i).toInt();
+        }
+        te_content->append("sum( "+list.join(",")+" )");
+        te_content->append("sum ==========>> "+QString::number(sum)+"\n");
     }
-   te_content->append("sum( "+list.join(",")+" )");
-   te_content->append("sum ==========>> "+QString::number(sum)+"\n");
+}
+
+void MainWindow::method_reset()
+{
+    te_content->clear();
+    list.clear();
+    method_clear();
 }
