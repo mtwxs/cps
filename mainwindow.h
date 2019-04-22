@@ -7,6 +7,7 @@
 #include<QDebug>
 #include <QTextEdit>
 #include <QCheckBox>
+#include <QKeyEvent>
 
 namespace Ui {
 class MainWindow;
@@ -60,6 +61,9 @@ private slots:
     void method_textedit_cursormove();
     void method_sumadd();
     void method_reset();
+    void method_enterGuiGe();
+    void keyPressEvent(QKeyEvent* event);
+
 
 
 };

@@ -54,6 +54,10 @@ MainWindow::MainWindow(QWidget *parent) :
     QValidator* vali_gg=new QRegExpValidator(regx_guige,this);
     le_guige->setValidator(vali_gg);
     le_guige->setPlaceholderText("2*100*10+2*80*8+2*60*6");
+    le_guige->setFocus();
+
+    //hotkey setting
+   this->setFocusPolicy(Qt::StrongFocus);
 
     connect(cb_tong,SIGNAL(stateChanged(int)),this,SLOT(method_cbt(int)));
     connect(cb_lv,SIGNAL(stateChanged(int)),this,SLOT(method_cbl(int)));
@@ -62,6 +66,8 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(te_content,SIGNAL(textChanged()),this,SLOT(method_textedit_cursormove()));
     connect(pb_sumadd,SIGNAL(clicked()),this,SLOT(method_sumadd()));
     connect(pb_reset,SIGNAL(clicked()),this,SLOT(method_reset()));
+
+    connect(le_guige,SIGNAL(returnPressed()),SLOT(method_enterGuiGe()));
 
 
 
@@ -1387,7 +1393,7 @@ void MainWindow::method_calc()
         if(re_pm.exactMatch(txt)){
 
             QString psabc=txt.mid(1,-1);
-            qDebug()<<psabc;
+//            qDebug()<<psabc;
 
             QStringList sl_xinghao=psabc.split("*");
             int pabc_width=sl_xinghao.at(0).toInt();
@@ -1517,4 +1523,35 @@ void MainWindow::method_reset()
     te_content->clear();
     list.clear();
     method_clear();
+}
+
+void MainWindow::method_enterGuiGe()
+{
+    method_calc();
+    le_guige->clearFocus();
+}
+
+void MainWindow::keyPressEvent(QKeyEvent *event)
+{
+
+    if((event->key()==Qt::Key_C) && (event->modifiers()==Qt::ControlModifier))
+    {
+
+        method_sumadd();
+
+    }
+
+    if(event->key()==Qt::Key_W){
+        le_guige->clear();
+
+        le_guige->setFocus();
+
+    }
+    if(event->key()==Qt::Key_B){
+        method_clear();
+    }
+    if(event->key()==Qt::Key_R){
+        method_reset();
+    }
+
 }
