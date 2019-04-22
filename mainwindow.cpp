@@ -7,7 +7,7 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    this->setWindowTitle("cps 计算排 abc-n-pe");
+    this->setWindowTitle("cps     made by mengtianwxs (calc pai price)");
     le_guige=ui->le_pai_guige;
     ui->le_p_danjai->setText("60");
 
