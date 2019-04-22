@@ -1523,6 +1523,7 @@ void MainWindow::method_reset()
     te_content->clear();
     list.clear();
     method_clear();
+    le_guige->setFocus();
 }
 
 void MainWindow::method_enterGuiGe()
