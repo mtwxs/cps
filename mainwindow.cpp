@@ -46,7 +46,11 @@ MainWindow::MainWindow(QWidget *parent) :
     le_1200->setValidator(vali);
     le_dj->setValidator(vali);
 
-    QRegExp regx_guige("([1-3]?\\*?[1-9][0-9][0-9]?\\*[1-9][0-9]?\\+[1-9]?\\*?[1-9][0-9]?[0-9]?\\*[1-9][0-9]?\\+[1-9]?\\*?[1-9][0-9]?[0-9]?\\*([1-9][0-9]?)?)|(4\\*[1-9][0-9][0-9]?\\*[1-9][0-9]?\\+[1-9][0-9]?[0-9]?\\*[1-9][0-9]?)");
+    QRegExp regx_guige("([1-3]?\\*?[1-9][0-9][0-9]?\\*[1-9][0-9]?\\+[1-9]?\\*?[1-9][0-9]?[0-9]?\\*[1-9][0-9]?\\+[1-9]?\\*?[1-9][0-9]?[0-9]?\\*([1-9][0-9]?)?)|"
+                       "(4\\*[1-9][0-9][0-9]?\\*[1-9][0-9]?\\+[1-9][0-9]?[0-9]?\\*[1-9][0-9]?)|"
+                       "(\\-[1-9][0-9][0-9]?\\*[1-9][0-9]?\\*[1-9][0-9]?)|"
+                       "(\\-[1-9][0-9][0-9]?[0-9]?)|"
+                       "(\\-[1-9][0-9][0-9]?[0-9]?\\*[1-9][0-9]?[0-9]?[0-9]?)");
     QValidator* vali_gg=new QRegExpValidator(regx_guige,this);
     le_guige->setValidator(vali_gg);
     le_guige->setPlaceholderText("2*100*10+2*80*8+2*60*6");
@@ -161,6 +165,15 @@ void MainWindow::method_calc()
     QRegExp re_4abcn("4\\*[1-9][0-9][0-9]?\\*[1-9][0-9]?");
     //@16 4*100*10+80*8
     QRegExp re_4abcnpe("4\\*[1-9][0-9][0-9]?\\*[1-9][0-9]?\\+[1-9][0-9][0-9]?\\*[1-9][0-9]?");
+    //@17  pm         100*10*12  //p: 100*10 m:12 p代表排的规格，m代表数量
+    QRegExp re_pm("\\-[1-9][0-9][0-9]?\\*[1-9][0-9]?\\*[1-9][0-9]?");
+
+//    @18  price      p1000  单台柜子的价格
+    QRegExp re_price("\\-[1-9][0-9][0-9]?[0-9]?");
+
+//    @19  price*m    p800*10
+    QRegExp re_pricem("\\-[1-9][0-9][0-9]?[0-9]?\\*[1-9][0-9]?[0-9]?[0-9]?");
+
 
 
 
@@ -176,7 +189,7 @@ void MainWindow::method_calc()
 
         //@@1  --------------------------------------------------------------------------
         if(re_abc.exactMatch(txt)){
-            qDebug()<<"reabc";
+//            qDebug()<<"reabc";
 
             QString pabc=sl_jiahao.at(0);
 
@@ -1368,11 +1381,84 @@ void MainWindow::method_calc()
 
         }
 
+ }//ggd_bool end
+        //@  17------------------------------------------------------------
+        //@17  pm  abc mode        p100*10*12  //p: 100*10 m:12 p代表排的规格，m代表数量
+        if(re_pm.exactMatch(txt)){
+
+            QString psabc=txt.mid(1,-1);
+            qDebug()<<psabc;
+
+            QStringList sl_xinghao=psabc.split("*");
+            int pabc_width=sl_xinghao.at(0).toInt();
+            int pabc_deep=sl_xinghao.at(1).toInt();
+            int pabc_ms=sl_xinghao.at(2).toInt();
+
+            te_content->append("- "+QString::number(pabc_width)+"*"+QString::number(pabc_deep)+"*"+QString::number(pabc_ms));
+
+
+            if(state=="t")
+            {
+                ui->statusBar->showMessage("- ABC MODE | 分支排 材质 铜");
+                int T=0;
+                T=pabc_width*pabc_deep*8.9*dj/1000;
+
+                te_content->append(QString::number(T)+" T");
+
+                QString TS="T*"+QString::number(pabc_ms);
+                te_content->append(TS);
+
+                int SUMTS=T*pabc_ms;
+                te_content->append("= "+QString::number(SUMTS)+"\n");
+                list.append(QString::number(SUMTS));
+            }
+
+            if(state=="l")
+            {
+                ui->statusBar->showMessage("- ABC MODE | 分支排  材质 铝");
+                int L=0;
+                L=pabc_width*pabc_deep*2.7*dj/1000;
+                te_content->append(QString::number(L)+" L");
+                QString LS="L*"+QString::number(pabc_ms);
+                te_content->append(LS);
+                int SUMLS=L*pabc_ms;
+                te_content->append("= "+QString::number(SUMLS)+"\n");
+                list.append(QString::number(SUMLS));
+
+            }
+
+    }
+
+        //    @18  price      p1000  单台柜子的价格
+//            QRegExp re_price("\\-[1-9][0-9][0-9]?[0-9]?");
+        if(re_price.exactMatch(txt)){
+
+            QString price=txt.mid(1,-1);
+
+            te_content->append("- "+price);
+            ui->statusBar->showMessage("- PRICE MODE | 分支排");
+            te_content->append("= "+price+"\n");
+            list.append(price);
 
 
 
+        }
 
-    }//ggd_bool end
+        //    @19  price*m    p800*10
+//            QRegExp re_pricem("\\-[1-9][0-9][0-9]?[0-9]?\\*[1-9][0-9]?[0-9]?[0-9]?");
+        if(re_pricem.exactMatch(txt)){
+            QString pr=txt.mid(1,-1);
+            int p=pr.split("*").at(0).toInt();
+            int m=pr.split("*").at(1).toInt();
+
+            te_content->append("- "+QString::number(p)+" * "+QString::number(m));
+            int SUMP=p*m;
+            ui->statusBar->showMessage("- PRICE MODE | 分支排");
+            te_content->append("= "+QString::number(SUMP)+"\n");
+            list.append(QString::number(SUMP));
+
+        }
+
 
 
 
