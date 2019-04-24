@@ -48,16 +48,18 @@ MainWindow::MainWindow(QWidget *parent) :
 
     QRegExp regx_guige("([1-3]?\\*?[1-9][0-9][0-9]?\\*[1-9][0-9]?\\+[1-9]?\\*?[1-9][0-9]?[0-9]?\\*[1-9][0-9]?\\+[1-9]?\\*?[1-9][0-9]?[0-9]?\\*([1-9][0-9]?)?)|"
                        "(4\\*[1-9][0-9][0-9]?\\*[1-9][0-9]?\\+[1-9][0-9]?[0-9]?\\*[1-9][0-9]?)|"
-                       "(\\-[1-9][0-9][0-9]?\\*[1-9][0-9]?\\*[1-9][0-9]?)|"
-                       "(\\-[1-9][0-9][0-9]?[0-9]?)|"
-                       "(\\-[1-9][0-9][0-9]?[0-9]?\\*[1-9][0-9]?[0-9]?[0-9]?)");
+                       "(\\-[1-9][0-9][0-9]?\\*[1-9][0-9]?\\*[1-9][0-9]?[0-9]?[0-9]?[0-9]?)|"
+                       "(\\-[1-9][0-9][0-9]?[0-9]?[0-9]?[0-9]?[0-9]?[0-9]?[0-9]?[0-9]?[0-9]?)|"
+                       "(\\-[1-9][0-9][0-9]?[0-9]?[0-9]?[0-9]?[0-9]?[0-9]?[0-9]?[0-9]?[0-9]?\\*[1-9][0-9]?[0-9]?[0-9]?[0-9]?[0-9]?[0-9]?[0-9]?)");
     QValidator* vali_gg=new QRegExpValidator(regx_guige,this);
     le_guige->setValidator(vali_gg);
     le_guige->setPlaceholderText("2*100*10+2*80*8+2*60*6");
     le_guige->setFocus();
 
+    te_content->setEnabled(false);
+
     //hotkey setting
-   this->setFocusPolicy(Qt::StrongFocus);
+//   this->setFocusPolicy(Qt::StrongFocus);
 
     connect(cb_tong,SIGNAL(stateChanged(int)),this,SLOT(method_cbt(int)));
     connect(cb_lv,SIGNAL(stateChanged(int)),this,SLOT(method_cbl(int)));
@@ -68,6 +70,11 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(pb_reset,SIGNAL(clicked()),this,SLOT(method_reset()));
 
     connect(le_guige,SIGNAL(returnPressed()),SLOT(method_enterGuiGe()));
+    connect(le_400,SIGNAL(returnPressed()),SLOT(method_enterGuiGe()));
+    connect(le_600,SIGNAL(returnPressed()),SLOT(method_enterGuiGe()));
+    connect(le_800,SIGNAL(returnPressed()),SLOT(method_enterGuiGe()));
+    connect(le_1000,SIGNAL(returnPressed()),SLOT(method_enterGuiGe()));
+    connect(le_1200,SIGNAL(returnPressed()),SLOT(method_enterGuiGe()));
 
 
 
@@ -172,13 +179,13 @@ void MainWindow::method_calc()
     //@16 4*100*10+80*8
     QRegExp re_4abcnpe("4\\*[1-9][0-9][0-9]?\\*[1-9][0-9]?\\+[1-9][0-9][0-9]?\\*[1-9][0-9]?");
     //@17  pm         100*10*12  //p: 100*10 m:12 p代表排的规格，m代表数量
-    QRegExp re_pm("\\-[1-9][0-9][0-9]?\\*[1-9][0-9]?\\*[1-9][0-9]?");
+    QRegExp re_pm("\\-[1-9][0-9][0-9]?\\*[1-9][0-9]?\\*[1-9][0-9]?[0-9]?[0-9]?[0-9]?");
 
 //    @18  price      p1000  单台柜子的价格
-    QRegExp re_price("\\-[1-9][0-9][0-9]?[0-9]?");
+    QRegExp re_price("\\-[1-9][0-9][0-9]?[0-9]?[0-9]?[0-9]?[0-9]?[0-9]?[0-9]?[0-9]?[0-9]?");
 
 //    @19  price*m    p800*10
-    QRegExp re_pricem("\\-[1-9][0-9][0-9]?[0-9]?\\*[1-9][0-9]?[0-9]?[0-9]?");
+    QRegExp re_pricem("\\-[1-9][0-9][0-9]?[0-9]?[0-9]?[0-9]?[0-9]?[0-9]?[0-9]?[0-9]?[0-9]?\\*[1-9][0-9]?[0-9]?[0-9]?[0-9]?[0-9]?[0-9]?[0-9]?");
 
 
 
@@ -1530,12 +1537,19 @@ void MainWindow::method_enterGuiGe()
 {
     method_calc();
     le_guige->clearFocus();
+    le_400->clearFocus();
+    le_600->clearFocus();
+    le_800->clearFocus();
+    le_1000->clearFocus();
+    le_1200->clearFocus();
+
 }
 
 void MainWindow::keyPressEvent(QKeyEvent *event)
 {
+    qDebug()<<event->key();
 
-    if((event->key()==Qt::Key_C) && (event->modifiers()==Qt::ControlModifier))
+    if(event->key()==Qt::Key_C)
     {
 
         method_sumadd();
@@ -1550,9 +1564,18 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
     }
     if(event->key()==Qt::Key_B){
         method_clear();
+        le_guige->setFocus();
     }
     if(event->key()==Qt::Key_R){
         method_reset();
+    }
+
+
+    //- key
+    if(event->key()==45){
+        le_guige->clear();
+        le_guige->setText("-");
+        le_guige->setFocus();
     }
 
 }

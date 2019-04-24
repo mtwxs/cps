@@ -175,19 +175,19 @@
  <layoutdefault spacing="6" margin="11"/>
  <tabstops>
   <tabstop>le_pai_guige</tabstop>
-  <tabstop>le_p_danjai</tabstop>
   <tabstop>le_600</tabstop>
   <tabstop>le_800</tabstop>
   <tabstop>le_1000</tabstop>
   <tabstop>le_1200</tabstop>
   <tabstop>le_400</tabstop>
+  <tabstop>le_p_danjai</tabstop>
+  <tabstop>cb_tong</tabstop>
+  <tabstop>cb_lv</tabstop>
   <tabstop>pb_calc</tabstop>
   <tabstop>pb_clear</tabstop>
   <tabstop>pb_sumadd</tabstop>
   <tabstop>pb_reset</tabstop>
   <tabstop>te_content</tabstop>
-  <tabstop>cb_tong</tabstop>
-  <tabstop>cb_lv</tabstop>
  </tabstops>
  <resources/>
  <connections/>
