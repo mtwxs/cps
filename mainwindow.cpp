@@ -1547,7 +1547,7 @@ void MainWindow::method_enterGuiGe()
 
 void MainWindow::keyPressEvent(QKeyEvent *event)
 {
-    qDebug()<<event->key();
+//    qDebug()<<event->key();
 
     if(event->key()==Qt::Key_C)
     {
